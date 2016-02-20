@@ -30,6 +30,9 @@
 // Die if IN_MYBB is not defined, for security reasons.
 defined('IN_MYBB') or die('Direct initialization of this file is not allowed.');
 
+// PLUGINLIBRARY
+defined('PLUGINLIBRARY') or define('PLUGINLIBRARY', MYBB_ROOT.'inc/plugins/pluginlibrary.php');
+
 // Tell MyBB when to run the hook
 if(!defined('IN_ADMINCP'))
 {
@@ -46,13 +49,104 @@ function ougc_hal_info()
 	return array(
 		'name'			=> 'OUGC Hide Administrator Location',
 		'description'	=> "Hide administrator's location at WOL list.",
-		'website'		=> 'http://mods.mybb.com/view/ougc-inlire',
-		'author'		=> 'Omar Gonzalez',
+		'website'		=> 'http://omarg.me',
+		'author'		=> 'Omar G.',
 		'authorsite'	=> 'http://omarg.me',
 		'version'		=> '1.0',
-		'guid' 			=> '',
-		'compatibility' => '18*'
+		'versioncode'	=> 1000,
+		'compatibility' => '18*',
+		'codename' 		=> 'ougc_hal',
+		'pl'			=> array(
+			'version'	=> 12,
+			'url'		=> 'http://community.mybb.com/mods.php?action=view&pid=573'
+		)
 	);
+}
+
+// _activate() routine
+function ougc_hal_activate()
+{
+	global $PL, $lang, $mybb;
+	ougc_hal_load_pluginlibrary();
+
+	// Insert/update version into cache
+	$plugins = $mybb->cache->read('ougc_plugins');
+	if(!$plugins)
+	{
+		$plugins = array();
+	}
+
+	$plugin = ougc_hal_info();
+
+	if(!isset($plugins['ougc_hal']))
+	{
+		$plugins['ougc_hal'] = $plugin['versioncode'];
+	}
+
+	/*~*~* RUN UPDATES START *~*~*/
+
+	/*~*~* RUN UPDATES END *~*~*/
+
+	$plugins['ougc_hal'] = $plugin['versioncode'];
+	$mybb->cache->update('ougc_plugins', $plugins);
+}
+
+// _is_installed() routine
+function ougc_hal_is_installed()
+{
+	global $cache;
+
+	$plugins = $cache->read('ougc_plugins');
+
+	return isset($plugins['ougc_hal']);
+}
+
+// _uninstall() routine
+function ougc_hal_uninstall()
+{
+	global $PL, $cache;
+	ougc_hal_load_pluginlibrary();
+
+	// Delete version from cache
+	$plugins = (array)$cache->read('ougc_plugins');
+
+	if(isset($plugins['ougc_hal']))
+	{
+		unset($plugins['ougc_hal']);
+	}
+
+	if(!empty($plugins))
+	{
+		$cache->update('ougc_plugins', $plugins);
+	}
+	else
+	{
+		$PL->cache_delete('ougc_plugins');
+	}
+}
+
+// PluginLibrary requirement check
+function ougc_hal_load_pluginlibrary()
+{
+	global $lang;
+	$plugin = ougc_hal_info();
+
+	if(!file_exists(PLUGINLIBRARY))
+	{
+		flash_message('Plugin Library is missing.', 'error');
+		admin_redirect('index.php?module=config-plugins');
+	}
+
+	global $PL;
+	$PL or require_once PLUGINLIBRARY;
+
+	if($PL->version < $plugin['pl']['version'])
+	{
+		global $lang;
+
+		flash_message('Plugin Library version is too old.', 'error');
+		admin_redirect('index.php?module=config-plugins');
+	}
 }
 
 // Add our moderation option
@@ -83,9 +177,9 @@ function online_user()
 
 	if(in_array($mybb->user['uid'], $admins['users']) || is_member($admins['groups']))
 	{
-		//return;
+		return;
 	}
-_dump($admins);
+
 	if(in_array($user['uid'], $admins['users']) || is_member($admins['groups'], $user))
 	{
 		$user['ip'] = '';
