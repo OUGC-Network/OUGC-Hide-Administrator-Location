@@ -2,13 +2,13 @@
 
 /***************************************************************************
  *
- *	OUGC Pages plugin (/inc/languages/english/admin/ougc_pages.lang.php)
+ *	OUGC Pages plugin (/inc/languages/spanol/admin/ougc_hal.lang.php)
  *	Author: Omar Gonzalez
- *	Copyright: © 2014 - 2020 Omar Gonzalez
+ *	Copyright: © 2016 - 2020 Omar Gonzalez
  *
  *	Website: https://ougc.network
  *
- *	Create additional pages directly from the ACP.
+ *	Hide administrator's location at WOL list.
  *
  ***************************************************************************
  
