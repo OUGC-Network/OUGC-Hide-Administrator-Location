@@ -4,9 +4,9 @@
  *
  *	OUGC Hide Administrator Location (/inc/plugins/ougc_hal.php)
  *	Author: Omar Gonzalez
- *	Copyright: © 2016 Omar Gonzalez
- *   
- *	Website: http://omarg.me
+ *	Copyright: © 2016 - 2020 Omar Gonzalez
+ *
+ *	Website: https://ougc.network
  *
  *	Hide administrator's location at WOL list.
  *
@@ -42,22 +42,28 @@ if(!defined('IN_ADMINCP'))
 // Settings
 define('OUGC_HAL_SETTING_UIDS', ''); // comma separated users (uid) to hide
 define('OUGC_HAL_SETTING_GIDS', ''); // comma separated groups (gid) to hide
+// Thread as a "additional administrators" settings, as they will be able to bypass the system and view any location
+// To hide the location of specific users or groups without them being able treated as admins use the added settings instead
 
 // Plugin API
 function ougc_hal_info()
 {
+	global $lang;
+
+	isset($lang->setting_group_ougc_hal) || $lang->load('ougc_hal');
+
 	return array(
 		'name'			=> 'OUGC Hide Administrator Location',
-		'description'	=> "Hide administrator's location at WOL list.",
-		'website'		=> 'http://omarg.me',
+		'description'	=> $lang->setting_group_ougc_hal_desc,
+		'website'		=> 'https://ougc.network',
 		'author'		=> 'Omar G.',
-		'authorsite'	=> 'http://omarg.me',
-		'version'		=> '1.0',
-		'versioncode'	=> 1000,
-		'compatibility' => '18*',
+		'authorsite'	=> 'https://ougc.network',
+		'version'		=> '1.8.20',
+		'versioncode'	=> 1820,
+		'compatibility'	=> '18*',
 		'codename' 		=> 'ougc_hal',
 		'pl'			=> array(
-			'version'	=> 12,
+			'version'	=> 13,
 			'url'		=> 'http://community.mybb.com/mods.php?action=view&pid=573'
 		)
 	);
@@ -68,6 +74,22 @@ function ougc_hal_activate()
 {
 	global $PL, $lang, $mybb;
 	ougc_hal_load_pluginlibrary();
+
+	// Add settings group
+	$PL->settings('ougc_hal', $lang->setting_group_ougc_hal, $lang->setting_group_ougc_hal_desc, array(
+		'uids'			=> array(
+		   'title'			=> $lang->setting_ougc_hal_uids,
+		   'description'	=> $lang->setting_ougc_hal_uids_descs,
+		   'optionscode'	=> 'text',
+			'value'			=>	'',
+		),
+		'gids'				=> array(
+		   'title'			=> $lang->setting_ougc_hal_gids,
+		   'description'	=> $lang->setting_ougc_hal_gids_desc,
+		   'optionscode'	=> 'groupselect',
+			'value'			=>	4,
+		)
+	));
 
 	// Insert/update version into cache
 	$plugins = $mybb->cache->read('ougc_plugins');
@@ -107,6 +129,8 @@ function ougc_hal_uninstall()
 	global $PL, $cache;
 	ougc_hal_load_pluginlibrary();
 
+	$PL->settings_delete('ougc_hal');
+
 	// Delete version from cache
 	$plugins = (array)$cache->read('ougc_plugins');
 
@@ -128,23 +152,17 @@ function ougc_hal_uninstall()
 // PluginLibrary requirement check
 function ougc_hal_load_pluginlibrary()
 {
-	global $lang;
+	global $lang, $PL;
+
 	$plugin = ougc_hal_info();
 
-	if(!file_exists(PLUGINLIBRARY))
+	!file_exists(PLUGINLIBRARY) || $PL or require_once PLUGINLIBRARY;
+
+	isset($lang->setting_group_ougc_hal) || $lang->load('ougc_hal');
+
+	if(!file_exists(PLUGINLIBRARY) || empty($PL->version) || $PL->version < $plugin['pl']['version'])
 	{
-		flash_message('Plugin Library is missing.', 'error');
-		admin_redirect('index.php?module=config-plugins');
-	}
-
-	global $PL;
-	$PL or require_once PLUGINLIBRARY;
-
-	if($PL->version < $plugin['pl']['version'])
-	{
-		global $lang;
-
-		flash_message('Plugin Library version is too old.', 'error');
+		flash_message($lang->printf($lang->ougc_hal_pluginlibrary, $plugin['pl']['url'], $plugin['pl']['version']), 'error');
 		admin_redirect('index.php?module=config-plugins');
 	}
 }
@@ -154,12 +172,15 @@ function online_user()
 {
 	global $user, $mybb;
 
-	static $admins = array();
-	if(empty($admins))
-	{
-		global $config;
+	static $admins = null;
 
-		$admins['users'] = explode(',', (string)$config['super_admins']);
+	if($admins === null)
+	{
+		$admins = array();
+
+		global $mybb;
+
+		$admins['users'] = explode(',', (string)$mybb->config['super_admins']);
 
 		$admins['groups'] = array();
 
@@ -180,7 +201,14 @@ function online_user()
 		return;
 	}
 
-	if(in_array($user['uid'], $admins['users']) || is_member($admins['groups'], $user))
+	$uids = array_filter(array_map('intval', array_merge($admins['users'], explode(',', $mybb->settings['ougc_hal_uids']))));
+
+	if(
+		in_array($user['uid'], $uids) ||
+		in_array($user['uid'], $admins['users']) ||
+		is_member($admins['groups'], $user) ||
+		$mybb->settings['ougc_hal_gids'] == -1
+	)
 	{
 		$user['ip'] = '';
 		//$user['nopermission'] = 1;
