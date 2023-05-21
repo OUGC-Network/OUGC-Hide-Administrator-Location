@@ -1,5 +1,5 @@
 ## OUGC Hide Administrator Location
-Hide administrator's location at WOL list.
+Hide administrator's location from the Who Is Online (WOL) list.
 
 ***
 
