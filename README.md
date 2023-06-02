@@ -15,8 +15,6 @@
 
 </div>
 
----
-
 <p align="center"> Hide administrator's location from the Who Is Online (WOL) list..
     <br> 
 </p>
