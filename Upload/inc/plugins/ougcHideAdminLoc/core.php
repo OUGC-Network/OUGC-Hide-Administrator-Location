@@ -74,7 +74,7 @@ function loadPluginLibrary(bool $doCheck = true): bool
     return true;
 }
 
-function addHooks(string $namespace): true
+function addHooks(string $namespace): bool
 {
     global $plugins;
 
