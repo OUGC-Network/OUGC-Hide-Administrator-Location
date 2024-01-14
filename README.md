@@ -23,12 +23,12 @@
 
 - [About](#about)
 - [Getting Started](#getting_started)
-	- [Dependencies](#dependencies)
-	- [File Structure](#file_structure)
-	- [Install](#install)
-	- [Update](#update)
+    - [Dependencies](#dependencies)
+    - [File Structure](#file_structure)
+    - [Install](#install)
+    - [Update](#update)
 - [Settings](#settings)
-	- [Allow Bypassing](#settings_bypass)
+    - [Allow Bypassing](#settings_bypass)
 - [Usage](#usage)
 - [Built Using](#built_using)
 - [Authors](#authors)
@@ -37,7 +37,11 @@
 
 ## 🚀 About <a name = "about"></a>
 
-OUGC Hide Administrator Location is a MyBB plugin designed to enhance privacy and security. With this plugin, administrators can effortlessly hide their location from the Who Is Online (WOL) list, ensuring their presence remains discreet. Additionally, the plugin allows for selective user and group hiding, providing administrators with greater control over who appears in the WOL list. However, administrators retain the ability to see the location of any user at all times.
+OUGC Hide Administrator Location is a MyBB plugin designed to enhance privacy and security. With this plugin,
+administrators can effortlessly hide their location from the Who Is Online (WOL) list, ensuring their presence remains
+discreet. Additionally, the plugin allows for selective user and group hiding, providing administrators with greater
+control over who appears in the WOL list. However, administrators retain the ability to see the location of any user at
+all times.
 
 [Go up to Table of Contents](#table_of_contents)
 
@@ -49,8 +53,8 @@ The following information will assist you into getting a copy of this plugin up 
 
 A setup that meets the following requirements is necessary to use this plugin.
 
-- [MyBB](https://mybb.com/) >= 1.8.30
-- PHP >= 7.4
+- [MyBB](https://mybb.com/) >= 1.8
+- PHP >= 7.0
 - [MyBB-PluginLibrary](https://github.com/frostschutz/MyBB-PluginLibrary) >= 13
 
 ### File structure <a name = "file_structure"></a>
@@ -77,7 +81,8 @@ A setup that meets the following requirements is necessary to use this plugin.
 
 Follow the next steps in order to install a copy of this plugin on your forum.
 
-1. Download the latest package from the [MyBB Extend](https://community.mybb.com/mods.php?action=view&pid=1361) site or from the [repository releases](https://github.com/OUGC-Network/OUGC-Hide-Administrator-Location/releases/latest).
+1. Download the latest package from the [MyBB Extend](https://community.mybb.com/mods.php?action=view&pid=1361) site or
+   from the [repository releases](https://github.com/OUGC-Network/OUGC-Hide-Administrator-Location/releases/latest).
 2. Upload the contents of the _Upload_ folder to your MyBB root directory.
 3. Browse to _Configuration » Plugins_ and install this plugin by clicking _Install & Activate_.
 
@@ -98,25 +103,28 @@ Below you can find a description of the plugin settings.
 ### Global Settings
 
 - **Hide Specific Users** `select`
-	- _Insert the UID of the users that you want to hide from the Who Is Online (WOL) list._
+    - _Insert the UID of the users that you want to hide from the Who Is Online (WOL) list._
 - **Hide Specific Groups** `yesNo` Default: `yes`
-	- _Select the groups that you want to hide from the Who Is Online (WOL) list._
+    - _Select the groups that you want to hide from the Who Is Online (WOL) list._
 
 ### Allow User or Group Bypassing <a name = "settings_bypass"></a>
 
-Additionally, you can stop allow specific users or groups to see any location as if they were administrators by modifying a constant in the plugin file `./inc/plugins/ougc_hal.php`:
+Additionally, you can stop allow specific users or groups to see any location as if they were administrators by
+modifying a constant in the plugin file `./inc/plugins/ougc_hal.php`:
 
 `OUGC_HAL_SETTING_UIDS` `array`; default is set to `[]`
 
 `OUGC_HAL_SETTING_GIDS` `array`; default is set to `[]`
 
-Note that by default super administrators and administrators can see any location so modification of these constants is not necessary under common setups.
+Note that by default super administrators and administrators can see any location so modification of these constants is
+not necessary under common setups.
 
 [Go up to Table of Contents](#table_of_contents)
 
 ## 📖 Usage <a name="usage"></a>
 
-This plugin has no additional configurations; after activating make sure to modify the global settings in order to get this plugin working.
+This plugin has no additional configurations; after activating make sure to modify the global settings in order to get
+this plugin working.
 
 [Go up to Table of Contents](#table_of_contents)
 
@@ -132,7 +140,8 @@ This plugin has no additional configurations; after activating make sure to modi
 
 - [@Omar G](https://github.com/Sama34) - Idea & Initial work
 
-See also the list of [contributors](https://github.com/OUGC-Network/OUGC-Hide-Administrator-Location/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/OUGC-Network/OUGC-Hide-Administrator-Location/contributors) who
+participated in this project.
 
 [Go up to Table of Contents](#table_of_contents)
 
@@ -144,7 +153,8 @@ See also the list of [contributors](https://github.com/OUGC-Network/OUGC-Hide-Ad
 
 ## 🎈 Support & Feedback <a name="support"></a>
 
-This is free development and any contribution is welcome. Get support or leave feedback at the official [MyBB Community](https://community.mybb.com/thread-227574.html).
+This is free development and any contribution is welcome. Get support or leave feedback at the
+official [MyBB Community](https://community.mybb.com/thread-227574.html).
 
 Thanks for downloading and using our plugins!
 
