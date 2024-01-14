@@ -53,7 +53,7 @@ The following information will assist you into getting a copy of this plugin up 
 
 A setup that meets the following requirements is necessary to use this plugin.
 
-- [MyBB](https://mybb.com/) >= 1.8
+- [MyBB](https://mybb.com/) >= 1.8.3x
 - PHP >= 7.0
 - [MyBB-PluginLibrary](https://github.com/frostschutz/MyBB-PluginLibrary) >= 13
 
