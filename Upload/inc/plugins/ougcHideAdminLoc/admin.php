@@ -51,7 +51,7 @@ function pluginInfo(): array
     ];
 }
 
-function pluginActivate(): true
+function pluginActivate(): bool
 {
     global $PL, $lang, $cache;
 
